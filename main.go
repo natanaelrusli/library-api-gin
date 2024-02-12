@@ -1,13 +1,38 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"log"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
+
+type Response struct {
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
+
+type Query struct {
+	Name string `form:"name"`
+}
 
 func main() {
 	r := gin.Default()
+	r.Use(Logger())
+
 	r.GET("/ping", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message": "pong",
+		var query Query
+		if err := ctx.ShouldBindQuery(&query); err != nil {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, query)
+		}
+
+		ctx.JSON(200, Response{
+			Message: "PONG",
+			Data:    query.Name,
 		})
 	})
-	r.Run() // listen and serve on 0.0.0.0:8080
+
+	if err := r.Run(":8080"); err != nil {
+		log.Fatal("error gin")
+	}
 }
