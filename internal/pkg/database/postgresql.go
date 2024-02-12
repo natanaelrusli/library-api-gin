@@ -12,10 +12,9 @@ import (
 func InitPostgres(cfg *config.Config) (*sql.DB, error) {
 	dbConfig := cfg.DBConfig
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Jakarta",
+	dsn := fmt.Sprintf("host=%s user=%s password='' dbname=%s port=%d sslmode=disable TimeZone=Asia/Jakarta",
 		dbConfig.Host,
 		dbConfig.Username,
-		dbConfig.Password,
 		dbConfig.DbName,
 		dbConfig.Port,
 	)

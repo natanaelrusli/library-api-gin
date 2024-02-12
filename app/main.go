@@ -5,6 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	bookHandler "github.com/natanaelrusli/library-api-gin/internal/book/delivery/http"
+	"github.com/natanaelrusli/library-api-gin/internal/book/repository/postgres"
+	"github.com/natanaelrusli/library-api-gin/internal/book/usecase"
 	"github.com/natanaelrusli/library-api-gin/internal/config"
 	"github.com/natanaelrusli/library-api-gin/internal/dto"
 	"github.com/natanaelrusli/library-api-gin/internal/middleware"
@@ -15,10 +18,23 @@ func main() {
 	r := gin.Default()
 	r.Use(middleware.Logger())
 	config := config.InitConfig()
-	_, err := database.InitPostgres(config)
+	db, err := database.InitPostgres(config)
 	if err != nil {
 		log.Fatalln("error connecting to database: ", err)
 	}
+
+	defer func() {
+		err := db.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	bookRepository := postgres.NewPostgresBookRepository(db)
+	bookUsecase := usecase.NewBookUsecase(bookRepository)
+	bookHandler := bookHandler.NewBookHandler(bookUsecase)
+
+	r.GET("/books", bookHandler.GetAllBooks)
 
 	r.GET("/ping", func(ctx *gin.Context) {
 		var query dto.Query
