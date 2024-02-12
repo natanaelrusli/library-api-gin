@@ -27,7 +27,7 @@ func main() {
 		}
 
 		ctx.JSON(200, Response{
-			Message: "PONG",
+			Message: "PONG!!!",
 			Data:    query.Name,
 		})
 	})
