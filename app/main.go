@@ -5,28 +5,21 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/natanaelrusli/library-api-gin/internal/dto"
+	"github.com/natanaelrusli/library-api-gin/internal/middleware"
 )
-
-type Response struct {
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
-}
-
-type Query struct {
-	Name string `form:"name"`
-}
 
 func main() {
 	r := gin.Default()
-	r.Use(Logger())
+	r.Use(middleware.Logger())
 
 	r.GET("/ping", func(ctx *gin.Context) {
-		var query Query
+		var query dto.Query
 		if err := ctx.ShouldBindQuery(&query); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, query)
 		}
 
-		ctx.JSON(200, Response{
+		ctx.JSON(200, dto.Response{
 			Message: "PONG!!!",
 			Data:    query.Name,
 		})
