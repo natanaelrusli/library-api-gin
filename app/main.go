@@ -5,13 +5,20 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/natanaelrusli/library-api-gin/internal/config"
 	"github.com/natanaelrusli/library-api-gin/internal/dto"
 	"github.com/natanaelrusli/library-api-gin/internal/middleware"
+	"github.com/natanaelrusli/library-api-gin/internal/pkg/database"
 )
 
 func main() {
 	r := gin.Default()
 	r.Use(middleware.Logger())
+	config := config.InitConfig()
+	_, err := database.InitPostgres(config)
+	if err != nil {
+		log.Fatalln("error connecting to database: ", err)
+	}
 
 	r.GET("/ping", func(ctx *gin.Context) {
 		var query dto.Query
