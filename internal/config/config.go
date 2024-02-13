@@ -1,7 +1,7 @@
 package config
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"strconv"
 
@@ -20,15 +20,15 @@ type DatabaseConfig struct {
 	Password string
 }
 
-func InitConfig() *Config {
+func InitConfig() (*Config, error) {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalln("error loading .env file")
+		return nil, fmt.Errorf("error loading .env file: %w", err)
 	}
 
 	return &Config{
 		DBConfig: initDbConfig(),
-	}
+	}, nil
 }
 
 func initDbConfig() DatabaseConfig {

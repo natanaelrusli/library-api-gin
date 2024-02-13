@@ -26,7 +26,11 @@ func main() {
 	r := gin.Default()
 	r.Use(middleware.Logger())
 	r.Use(middleware.GlobalErrorHandler())
-	config := config.InitConfig()
+	config, err := config.InitConfig()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	db, err := database.InitPostgres(config)
 	if err != nil {
 		log.Fatalln("error connecting to database: ", err)
