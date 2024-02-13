@@ -1,11 +1,11 @@
 package http
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/natanaelrusli/library-api-gin/internal/book/dto"
+	"github.com/natanaelrusli/library-api-gin/internal/customerror"
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
 )
 
@@ -24,11 +24,8 @@ func (h *BookHandler) GetAllBooks(c *gin.Context) {
 
 	books, err := h.BookUsecase.FetchAll()
 	if err != nil {
-		log.Println(err)
-		c.JSON(http.StatusOK, gin.H{
-			"error": err,
-		})
-
+		err := customerror.NewCustomError(400, "errorrr")
+		c.Error(err)
 		return
 	}
 
@@ -43,18 +40,15 @@ func (h *BookHandler) GetBookByID(c *gin.Context) {
 	var params dto.GetBookByIdParams
 
 	if err := c.ShouldBindUri(&params); err != nil {
-		c.JSON(400, gin.H{
-			"error": err,
-		})
+		err := customerror.NewCustomError(400, err.Error())
+		c.Error(err)
 		return
 	}
 
 	book, err := h.BookUsecase.GetByID(params.ID)
 	if err != nil {
-		log.Println(err)
-		c.JSON(http.StatusOK, gin.H{
-			"error": err.Error(),
-		})
+		err := customerror.NewCustomError(500, err.Error())
+		c.Error(err)
 
 		return
 	}

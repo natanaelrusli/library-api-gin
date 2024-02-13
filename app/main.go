@@ -17,6 +17,7 @@ import (
 func main() {
 	r := gin.Default()
 	r.Use(middleware.Logger())
+	r.Use(middleware.GlobalErrorHandler())
 	config := config.InitConfig()
 	db, err := database.InitPostgres(config)
 	if err != nil {
