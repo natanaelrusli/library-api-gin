@@ -116,3 +116,19 @@ func (h *BookHandler) GetBookAuthor(c *gin.Context) {
 		"data":    author,
 	})
 }
+
+func (h *BookHandler) GetAllBooksWithAuthor(c *gin.Context) {
+	c.Header("Content-Type", "application/json")
+
+	books, err := h.BookUsecase.FetchAllWithAuthor()
+	if err != nil {
+		err := customerror.NewCustomError(400, err.Error())
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, dto.Response{
+		Message: constants.MessageOK,
+		Data:    books,
+	})
+}

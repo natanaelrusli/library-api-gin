@@ -78,3 +78,13 @@ func (u *bookUsecase) GetBookAuthor(id int) (domain.Author, error) {
 
 	return author, nil
 }
+
+func (u *bookUsecase) FetchAllWithAuthor() ([]domain.BookWithAuthor, error) {
+	books, err := u.bookRepo.FetchAllWithAuthor()
+
+	if err != nil {
+		return []domain.BookWithAuthor{}, err
+	}
+
+	return books, nil
+}

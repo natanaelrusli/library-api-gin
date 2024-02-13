@@ -115,3 +115,49 @@ func (r *postgresBookRepository) CreateOne(book domain.Book) (domain.Book, error
 
 	return resultBook, nil
 }
+
+func (r *postgresBookRepository) FetchAllWithAuthor() ([]domain.BookWithAuthor, error) {
+	var booksWithAuthor []domain.BookWithAuthor
+	q := `
+		SELECT 
+			b.id,
+			b.title,
+			b.description,
+			b.cover,
+			b.author_id,
+			a.name author_name,
+			b.stock,
+			b.updated_at,
+			b.created_at,
+			b.deleted_at 
+		FROM books AS b
+		JOIN authors as a ON b.author_id = a.id 
+		WHERE b.deleted_at IS NULL;
+	`
+
+	rows, err := r.Conn.Query(q)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var bookWithAuthor domain.BookWithAuthor
+		if err := rows.Scan(
+			&bookWithAuthor.Id,
+			&bookWithAuthor.Title,
+			&bookWithAuthor.Description,
+			&bookWithAuthor.Cover,
+			&bookWithAuthor.AuthorID,
+			&bookWithAuthor.AuthorName,
+			&bookWithAuthor.Stock,
+			&bookWithAuthor.UpdatedAt,
+			&bookWithAuthor.CreatedAt,
+			&bookWithAuthor.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+		booksWithAuthor = append(booksWithAuthor, bookWithAuthor)
+	}
+
+	return booksWithAuthor, nil
+}
