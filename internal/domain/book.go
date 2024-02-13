@@ -19,8 +19,10 @@ type Book struct {
 
 type BookUsecase interface {
 	FetchAll() ([]Book, error)
+	GetByID(id int) (Book, error)
 }
 
 type BookRepository interface {
 	FetchAll() ([]Book, error)
+	GetByID(id int) (Book, error)
 }

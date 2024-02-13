@@ -35,6 +35,7 @@ func main() {
 	bookHandler := bookHandler.NewBookHandler(bookUsecase)
 
 	r.GET("/books", bookHandler.GetAllBooks)
+	r.GET("/books/:id", bookHandler.GetBookByID)
 
 	r.GET("/ping", func(ctx *gin.Context) {
 		var query dto.Query

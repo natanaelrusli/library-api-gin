@@ -21,3 +21,13 @@ func (u *bookUsecase) FetchAll() ([]domain.Book, error) {
 
 	return books, nil
 }
+
+func (u *bookUsecase) GetByID(id int) (domain.Book, error) {
+	book, err := u.bookRepo.GetByID(id)
+
+	if err != nil {
+		return domain.Book{}, err
+	}
+
+	return book, nil
+}

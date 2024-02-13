@@ -19,7 +19,7 @@ func NewPostgresBookRepository(conn *sql.DB) domain.BookRepository {
 func (r *postgresBookRepository) FetchAll() (res []domain.Book, err error) {
 	var books []domain.Book
 	q := `
-	SELECT * from books WHERE deleted_at IS NULL;
+		SELECT * from books WHERE deleted_at IS NULL;
 	`
 
 	rows, err := r.Conn.Query(q)
@@ -46,4 +46,28 @@ func (r *postgresBookRepository) FetchAll() (res []domain.Book, err error) {
 	}
 
 	return books, nil
+}
+
+func (r *postgresBookRepository) GetByID(id int) (domain.Book, error) {
+	var book domain.Book
+	q := `
+		SELECT * from books WHERE id = $1 AND deleted_at IS NULL;
+	`
+
+	err := r.Conn.QueryRow(q, id).Scan(
+		&book.Id,
+		&book.Title,
+		&book.Description,
+		&book.Cover,
+		&book.CreatedAt,
+		&book.UpdatedAt,
+		&book.DeletedAt,
+		&book.AuthorID,
+		&book.Stock,
+	)
+	if err != nil {
+		return domain.Book{}, err
+	}
+
+	return book, nil
 }
