@@ -92,3 +92,27 @@ func (h *BookHandler) CreateOne(c *gin.Context) {
 		"data":    book,
 	})
 }
+
+func (h *BookHandler) GetBookAuthor(c *gin.Context) {
+	c.Header("Content-Type", "application/json")
+	var params dto.GetAuthorByBookIdParams
+
+	if err := c.ShouldBindUri(&params); err != nil {
+		err := customerror.NewCustomError(400, err.Error())
+		c.Error(err)
+		return
+	}
+
+	author, err := h.BookUsecase.GetBookAuthor(params.ID)
+	if err != nil {
+		err := customerror.NewCustomError(500, err.Error())
+		c.Error(err)
+
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "OK",
+		"data":    author,
+	})
+}

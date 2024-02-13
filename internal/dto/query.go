@@ -7,3 +7,7 @@ type Query struct {
 type GetBookByIdParams struct {
 	ID int `uri:"id" binding:"required"`
 }
+
+type GetAuthorByBookIdParams struct {
+	ID int `uri:"id" binding:"required"`
+}

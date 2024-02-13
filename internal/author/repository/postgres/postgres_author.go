@@ -34,6 +34,7 @@ func (r *postgresAuthorRepository) GetByID(id int64) (domain.Author, error) {
 		&author.Name,
 		&author.CreatedAt,
 		&author.UpdatedAt,
+		&author.DeletedAt,
 	)
 
 	if err != nil {

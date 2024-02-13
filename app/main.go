@@ -5,8 +5,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	_authorRepo "github.com/natanaelrusli/library-api-gin/internal/author/repository/postgres"
 	bookHandler "github.com/natanaelrusli/library-api-gin/internal/book/delivery/http"
-	"github.com/natanaelrusli/library-api-gin/internal/book/repository/postgres"
+	_bookRepo "github.com/natanaelrusli/library-api-gin/internal/book/repository/postgres"
 	"github.com/natanaelrusli/library-api-gin/internal/book/usecase"
 	"github.com/natanaelrusli/library-api-gin/internal/config"
 	"github.com/natanaelrusli/library-api-gin/internal/dto"
@@ -31,13 +32,16 @@ func main() {
 		}
 	}()
 
-	bookRepository := postgres.NewPostgresBookRepository(db)
-	bookUsecase := usecase.NewBookUsecase(bookRepository)
+	bookRepository := _bookRepo.NewPostgresBookRepository(db)
+	authorRepository := _authorRepo.NewPostgresAuthorRepository(db)
+	bookUsecase := usecase.NewBookUsecase(bookRepository, authorRepository)
 	bookHandler := bookHandler.NewBookHandler(bookUsecase)
 
 	r.GET("/books", bookHandler.GetAllBooks)
 	r.GET("/books/:id", bookHandler.GetBookByID)
 	r.POST("/books", bookHandler.CreateOne)
+
+	r.GET("/books/:id/author", bookHandler.GetBookAuthor)
 
 	r.GET("/ping", func(ctx *gin.Context) {
 		var query dto.Query

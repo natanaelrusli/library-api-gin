@@ -27,6 +27,7 @@ type BookUsecase interface {
 		authorId int32,
 		stock int32,
 	) (Book, error)
+	GetBookAuthor(id int) (Author, error)
 }
 
 type BookRepository interface {

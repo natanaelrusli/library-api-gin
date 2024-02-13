@@ -7,12 +7,14 @@ import (
 )
 
 type bookUsecase struct {
-	bookRepo domain.BookRepository
+	bookRepo   domain.BookRepository
+	authorRepo domain.AuthorRepository
 }
 
-func NewBookUsecase(br domain.BookRepository) domain.BookUsecase {
+func NewBookUsecase(br domain.BookRepository, ar domain.AuthorRepository) domain.BookUsecase {
 	return &bookUsecase{
-		bookRepo: br,
+		bookRepo:   br,
+		authorRepo: ar,
 	}
 }
 
@@ -59,4 +61,20 @@ func (u *bookUsecase) CreateOne(
 	}
 
 	return resultBook, nil
+}
+
+func (u *bookUsecase) GetBookAuthor(id int) (domain.Author, error) {
+	book, err := u.bookRepo.GetByID(id)
+
+	if err != nil {
+		return domain.Author{}, err
+	}
+
+	author, err := u.authorRepo.GetByID(int64(book.AuthorID))
+
+	if err != nil {
+		return domain.Author{}, err
+	}
+
+	return author, nil
 }
