@@ -4,9 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/natanaelrusli/library-api-gin/internal/book/dto"
+	"github.com/natanaelrusli/library-api-gin/internal/constants"
 	"github.com/natanaelrusli/library-api-gin/internal/customerror"
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
+	"github.com/natanaelrusli/library-api-gin/internal/dto"
 )
 
 type BookHandler struct {
@@ -24,14 +25,14 @@ func (h *BookHandler) GetAllBooks(c *gin.Context) {
 
 	books, err := h.BookUsecase.FetchAll()
 	if err != nil {
-		err := customerror.NewCustomError(400, "errorrr")
+		err := customerror.NewCustomError(400, err.Error())
 		c.Error(err)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "OK",
-		"data":    books,
+	c.JSON(http.StatusOK, dto.Response{
+		Message: constants.MessageOK,
+		Data:    books,
 	})
 }
 
