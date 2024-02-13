@@ -37,6 +37,7 @@ func main() {
 
 	r.GET("/books", bookHandler.GetAllBooks)
 	r.GET("/books/:id", bookHandler.GetBookByID)
+	r.POST("/books", bookHandler.CreateOne)
 
 	r.GET("/ping", func(ctx *gin.Context) {
 		var query dto.Query

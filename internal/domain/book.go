@@ -20,9 +20,17 @@ type Book struct {
 type BookUsecase interface {
 	FetchAll() ([]Book, error)
 	GetByID(id int) (Book, error)
+	CreateOne(
+		title string,
+		description string,
+		cover string,
+		authorId int32,
+		stock int32,
+	) (Book, error)
 }
 
 type BookRepository interface {
 	FetchAll() ([]Book, error)
 	GetByID(id int) (Book, error)
+	CreateOne(book Book) (Book, error)
 }

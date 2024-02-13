@@ -71,3 +71,47 @@ func (r *postgresBookRepository) GetByID(id int) (domain.Book, error) {
 
 	return book, nil
 }
+
+func (r *postgresBookRepository) CreateOne(book domain.Book) (domain.Book, error) {
+	q := `
+		INSERT INTO books (
+			title,
+			description,
+			cover,
+			author_id,
+			stock,
+			updated_at,
+			created_at
+		) VALUES ($1, $2, $3, $4, $5, $6, $7)
+		RETURNING id, title, description, cover, author_id, stock, updated_at, created_at, deleted_at;
+	`
+
+	result := r.Conn.QueryRow(q,
+		book.Title,
+		book.Description,
+		book.Cover,
+		book.AuthorID,
+		book.Stock,
+		book.UpdatedAt,
+		book.CreatedAt,
+	)
+
+	var resultBook domain.Book
+	err := result.Scan(
+		&resultBook.Id,
+		&resultBook.Title,
+		&resultBook.Description,
+		&resultBook.Cover,
+		&resultBook.AuthorID,
+		&resultBook.Stock,
+		&resultBook.UpdatedAt,
+		&resultBook.CreatedAt,
+		&resultBook.DeletedAt,
+	)
+
+	if err != nil {
+		return domain.Book{}, err
+	}
+
+	return resultBook, nil
+}

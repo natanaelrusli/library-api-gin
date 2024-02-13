@@ -1,6 +1,10 @@
 package usecase
 
-import "github.com/natanaelrusli/library-api-gin/internal/domain"
+import (
+	"time"
+
+	"github.com/natanaelrusli/library-api-gin/internal/domain"
+)
 
 type bookUsecase struct {
 	bookRepo domain.BookRepository
@@ -30,4 +34,29 @@ func (u *bookUsecase) GetByID(id int) (domain.Book, error) {
 	}
 
 	return book, nil
+}
+
+func (u *bookUsecase) CreateOne(
+	title string,
+	description string,
+	cover string,
+	authorId int32,
+	stock int32,
+) (domain.Book, error) {
+	var book domain.Book
+
+	book.Title = title
+	book.Description = description
+	book.Cover = cover
+	book.AuthorID = authorId
+	book.Stock = stock
+	book.UpdatedAt = time.Now()
+	book.CreatedAt = time.Now()
+
+	resultBook, err := u.bookRepo.CreateOne(book)
+	if err != nil {
+		return domain.Book{}, err
+	}
+
+	return resultBook, nil
 }

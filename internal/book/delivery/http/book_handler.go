@@ -59,3 +59,36 @@ func (h *BookHandler) GetBookByID(c *gin.Context) {
 		"data":    book,
 	})
 }
+
+func (h *BookHandler) CreateOne(c *gin.Context) {
+	c.Header("Content-Type", "application/json")
+	var req dto.CreateOneBookRequest
+
+	err := c.BindJSON(&req)
+	if err != nil {
+		err := customerror.NewCustomError(500, err.Error())
+		c.Error(err)
+
+		return
+	}
+
+	book, err := h.BookUsecase.CreateOne(
+		req.Title,
+		req.Description,
+		req.Cover,
+		req.AuthorId,
+		req.Stock,
+	)
+
+	if err != nil {
+		err := customerror.NewCustomError(500, err.Error())
+		c.Error(err)
+
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "OK",
+		"data":    book,
+	})
+}
