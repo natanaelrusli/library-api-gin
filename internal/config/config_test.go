@@ -119,14 +119,6 @@ func TestInitConfigFail(t *testing.T) {
 	defer os.Unsetenv("ENV_FILE_PATH")
 
 	got, err := InitConfig()
-
-	if err == nil {
-		t.Error("InitConfig() expected error, got nil")
-	}
-
-	// Check if the return value is nil in case of failure
-	if got != nil {
-		t.Errorf("InitConfig() = %v, want nil", got)
-	}
+	assert.Error(t, err)
 	assert.Nil(t, got)
 }
