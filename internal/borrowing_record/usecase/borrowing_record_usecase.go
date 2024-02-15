@@ -36,3 +36,12 @@ func (u *borrowingRecordUsecase) CreateRecord(userId int, bookId int, status str
 
 	return record, nil
 }
+
+func (u *borrowingRecordUsecase) GetAllBorrowedRecord() ([]domain.BorrowingRecord, error) {
+	records, err := u.borrowingRecordRepo.GetAllBorrowedRecord()
+	if err != nil {
+		return nil, err
+	}
+
+	return records, nil
+}

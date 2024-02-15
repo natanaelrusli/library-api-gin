@@ -68,6 +68,7 @@ func main() {
 
 	r.GET("/users", userHandler.GetUsers)
 
+	r.GET("/borrowing-records/borrowed", borrowingRecordHandler.GetAllBorrowed)
 	r.POST("/borrowing-records", borrowingRecordHandler.Create)
 
 	r.GET("/ping", func(ctx *gin.Context) {

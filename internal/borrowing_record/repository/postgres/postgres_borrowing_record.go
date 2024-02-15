@@ -20,9 +20,9 @@ func (r *postgresBorrowingRecordRepository) CreateRecord(record domain.Borrowing
 	var createdRecord domain.BorrowingRecord
 
 	q := `
-		INSERT INTO borrowing_records 
-		(user_id, book_id, status, borrowing_date, returning_date, created_at, updated_at, deleted_at) 
-		VALUES 
+		INSERT INTO borrowing_records
+		(user_id, book_id, status, borrowing_date, returning_date, created_at, updated_at, deleted_at)
+		VALUES
 		($1, $2, $3, $4, $5, $6, $7, $8)
 		RETURNING
 		id, user_id, book_id, status, borrowing_date, returning_date, created_at, updated_at, deleted_at;
@@ -54,4 +54,42 @@ func (r *postgresBorrowingRecordRepository) CreateRecord(record domain.Borrowing
 	}
 
 	return createdRecord, nil
+}
+
+func (r *postgresBorrowingRecordRepository) GetAllBorrowedRecord() ([]domain.BorrowingRecord, error) {
+	var records []domain.BorrowingRecord
+	q := `
+		SELECT * 
+		FROM borrowing_records
+		WHERE status = 'BORROWED' 
+		AND deleted_at IS NULL
+	`
+
+	rows, err := r.Conn.Query(q)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var record domain.BorrowingRecord
+
+		if err := rows.Scan(
+			&record.Id,
+			&record.UserId,
+			&record.BookId,
+			&record.Status,
+			&record.BorrowingDate,
+			&record.ReturningDate,
+			&record.CreatedAt,
+			&record.UpdatedAt,
+			&record.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+
+		records = append(records, record)
+	}
+
+	return records, nil
 }

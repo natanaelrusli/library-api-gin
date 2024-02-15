@@ -48,3 +48,18 @@ func (h *BorrowingRecordHandler) Create(c *gin.Context) {
 		"data":    record,
 	})
 }
+
+func (h *BorrowingRecordHandler) GetAllBorrowed(c *gin.Context) {
+	records, err := h.BorrowingRecordUsecase.GetAllBorrowedRecord()
+	if err != nil {
+		err := customerror.NewCustomError(http.StatusInternalServerError, err.Error())
+		c.Error(err)
+
+		return
+	}
+
+	c.JSON(http.StatusOK, dto.Response{
+		Message: constants.MessageOK,
+		Data:    records,
+	})
+}

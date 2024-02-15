@@ -19,8 +19,10 @@ type BorrowingRecord struct {
 
 type BorrowingRecordUsecase interface {
 	CreateRecord(userId int, bookId int, status string) (BorrowingRecord, error)
+	GetAllBorrowedRecord() ([]BorrowingRecord, error)
 }
 
 type BorrowingRecordRepository interface {
 	CreateRecord(record BorrowingRecord) (BorrowingRecord, error)
+	GetAllBorrowedRecord() ([]BorrowingRecord, error)
 }
