@@ -11,3 +11,7 @@ type GetBookByIdParams struct {
 type GetAuthorByBookIdParams struct {
 	ID int `uri:"id" binding:"required"`
 }
+
+type GetUserByNameParams struct {
+	Name string `uri:"name" binding:"required"`
+}

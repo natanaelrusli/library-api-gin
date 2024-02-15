@@ -18,8 +18,10 @@ type User struct {
 
 type UserUsecase interface {
 	FetchAll() ([]User, error)
+	FetchByName(name string) (User, error)
 }
 
 type UserRepository interface {
 	FetchAll() ([]User, error)
+	FetchByName(name string) (User, error)
 }

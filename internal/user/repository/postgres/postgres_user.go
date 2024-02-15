@@ -49,3 +49,29 @@ func (r *postgresUserRepository) FetchAll() ([]domain.User, error) {
 
 	return users, nil
 }
+
+func (r *postgresUserRepository) FetchByName(name string) (domain.User, error) {
+	var user domain.User
+	q := `
+		SELECT * 
+		FROM users 
+		WHERE UPPER(name) = UPPER($1) 
+		AND deleted_at IS NULL;
+	`
+
+	err := r.Conn.QueryRow(q, name).Scan(
+		&user.Id,
+		&user.Name,
+		&user.Phone,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+		&user.DeletedAt,
+		&user.Email,
+		&user.Password,
+	)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	return user, nil
+}

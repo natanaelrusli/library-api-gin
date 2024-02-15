@@ -20,3 +20,12 @@ func (u *userUsecase) FetchAll() ([]domain.User, error) {
 
 	return users, nil
 }
+
+func (u *userUsecase) FetchByName(name string) (domain.User, error) {
+	user, err := u.userRepo.FetchByName(name)
+	if err != nil {
+		return domain.User{}, nil
+	}
+
+	return user, nil
+}
