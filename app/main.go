@@ -13,12 +13,15 @@ import (
 
 	_authorRepo "github.com/natanaelrusli/library-api-gin/internal/author/repository/postgres"
 	_bookRepo "github.com/natanaelrusli/library-api-gin/internal/book/repository/postgres"
+	_borrowingRecordRepo "github.com/natanaelrusli/library-api-gin/internal/borrowing_record/repository/postgres"
 	_userRepo "github.com/natanaelrusli/library-api-gin/internal/user/repository/postgres"
 
 	bookUsecase "github.com/natanaelrusli/library-api-gin/internal/book/usecase"
+	borrowingRecordUsecase "github.com/natanaelrusli/library-api-gin/internal/borrowing_record/usecase"
 	userUsecase "github.com/natanaelrusli/library-api-gin/internal/user/usecase"
 
 	bookHandler "github.com/natanaelrusli/library-api-gin/internal/book/delivery/http"
+	borrowingRecordHandler "github.com/natanaelrusli/library-api-gin/internal/borrowing_record/delivery/http"
 	userHandler "github.com/natanaelrusli/library-api-gin/internal/user/delivery/http"
 )
 
@@ -46,12 +49,15 @@ func main() {
 	bookRepository := _bookRepo.NewPostgresBookRepository(db)
 	authorRepository := _authorRepo.NewPostgresAuthorRepository(db)
 	userRepository := _userRepo.NewPostgresUserRepository(db)
+	borrowingRecordRepository := _borrowingRecordRepo.NewBorrowingRecordRepository(db)
 
 	bookUsecase := bookUsecase.NewBookUsecase(bookRepository, authorRepository)
 	userUsecase := userUsecase.NewUserUsecase(userRepository)
+	borrowingRecordUsecase := borrowingRecordUsecase.NewBorrowingRecordUsecase(borrowingRecordRepository)
 
 	bookHandler := bookHandler.NewBookHandler(bookUsecase)
 	userHandler := userHandler.NewUserHandler(userUsecase)
+	borrowingRecordHandler := borrowingRecordHandler.NewBorrowingRecordHandler(borrowingRecordUsecase)
 
 	r.GET("/books", bookHandler.GetAllBooks)
 	r.GET("/books/:id", bookHandler.GetBookByID)
@@ -61,6 +67,8 @@ func main() {
 	r.GET("/books/author", bookHandler.GetAllBooksWithAuthor)
 
 	r.GET("/users", userHandler.GetUsers)
+
+	r.POST("/borrowing-records", borrowingRecordHandler.Create)
 
 	r.GET("/ping", func(ctx *gin.Context) {
 		var query dto.Query

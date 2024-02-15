@@ -7,3 +7,9 @@ type CreateOneBookRequest struct {
 	AuthorId    int32  `json:"author_id" binding:"required"`
 	Stock       int32  `json:"stock" binding:"required"`
 }
+
+type CreateBorrowingRecordRequest struct {
+	UserId int    `json:"user_id" binding:"required"`
+	BookId int    `json:"book_id" binding:"required"`
+	Status string `json:"status" binding:"required"`
+}
