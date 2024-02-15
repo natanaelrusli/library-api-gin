@@ -38,16 +38,15 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 
 func (h *UserHandler) GetUserByName(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
-	var query dto.GetUserByNameParams
+	name, exists := c.GetQuery("name")
 
-	err := c.BindUri(&query)
-	if err != nil {
-		err := customerror.NewCustomError(http.StatusInternalServerError, err.Error())
+	if !exists {
+		err := customerror.NewCustomError(http.StatusBadRequest, domain.ErrBadParamInput.Error())
 		c.Error(err)
 		return
 	}
 
-	user, err := h.UserUsecase.FetchByName(query.Name)
+	user, err := h.UserUsecase.FetchByName(name)
 	if err != nil {
 		err := customerror.NewCustomError(http.StatusInternalServerError, err.Error())
 		c.Error(err)
