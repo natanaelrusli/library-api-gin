@@ -60,8 +60,7 @@ func main() {
 	r.GET("/books/:id/author", bookHandler.GetBookAuthor)
 	r.GET("/books/author", bookHandler.GetAllBooksWithAuthor)
 
-	r.GET("/users", userHandler.GetAllUsers)
-	r.GET("/user", userHandler.GetUserByName)
+	r.GET("/users", userHandler.GetUsers)
 
 	r.GET("/ping", func(ctx *gin.Context) {
 		var query dto.Query
