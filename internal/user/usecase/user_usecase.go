@@ -1,6 +1,10 @@
 package usecase
 
-import "github.com/natanaelrusli/library-api-gin/internal/domain"
+import (
+	"context"
+
+	"github.com/natanaelrusli/library-api-gin/internal/domain"
+)
 
 type userUsecase struct {
 	userRepo domain.UserRepository
@@ -12,8 +16,8 @@ func NewUserUsecase(ur domain.UserRepository) domain.UserUsecase {
 	}
 }
 
-func (u *userUsecase) FetchAll() ([]domain.User, error) {
-	users, err := u.userRepo.FetchAll()
+func (u *userUsecase) FetchAll(ctx context.Context) ([]domain.User, error) {
+	users, err := u.userRepo.FetchAll(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -21,8 +25,8 @@ func (u *userUsecase) FetchAll() ([]domain.User, error) {
 	return users, nil
 }
 
-func (u *userUsecase) FetchByName(name string) (domain.User, error) {
-	user, err := u.userRepo.FetchByName(name)
+func (u *userUsecase) FetchByName(ctx context.Context, name string) (domain.User, error) {
+	user, err := u.userRepo.FetchByName(ctx, name)
 	if err != nil {
 		return domain.User{}, nil
 	}

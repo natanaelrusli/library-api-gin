@@ -20,19 +20,19 @@ func NewUserHandler(u domain.UserUsecase) *UserHandler {
 	}
 }
 
-func (h *UserHandler) GetUsers(c *gin.Context) {
-	c.Header("Content-Type", "application/json")
+func (h *UserHandler) GetUsers(ctx *gin.Context) {
+	ctx.Header("Content-Type", "application/json")
 
-	name, exists := c.GetQuery("name")
+	name, exists := ctx.GetQuery("name")
 	if !exists {
-		users, err := h.UserUsecase.FetchAll()
+		users, err := h.UserUsecase.FetchAll(ctx)
 		if err != nil {
 			err := customerror.NewCustomError(http.StatusInternalServerError, err.Error())
-			c.Error(err)
+			ctx.Error(err)
 			return
 		}
 
-		c.JSON(http.StatusOK, dto.Response{
+		ctx.JSON(http.StatusOK, dto.Response{
 			Message: constants.MessageOK,
 			Data:    users,
 		})
@@ -40,18 +40,18 @@ func (h *UserHandler) GetUsers(c *gin.Context) {
 	} else {
 		if !exists {
 			err := customerror.NewCustomError(http.StatusBadRequest, domain.ErrBadParamInput.Error())
-			c.Error(err)
+			ctx.Error(err)
 			return
 		}
 
-		user, err := h.UserUsecase.FetchByName(name)
+		user, err := h.UserUsecase.FetchByName(ctx, name)
 		if err != nil {
 			err := customerror.NewCustomError(http.StatusInternalServerError, err.Error())
-			c.Error(err)
+			ctx.Error(err)
 			return
 		}
 
-		c.JSON(http.StatusOK, dto.Response{
+		ctx.JSON(http.StatusOK, dto.Response{
 			Message: constants.MessageOK,
 			Data:    user,
 		})

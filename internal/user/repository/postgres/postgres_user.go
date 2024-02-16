@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"context"
 	"database/sql"
 
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
@@ -16,7 +17,7 @@ func NewPostgresUserRepository(conn *sql.DB) domain.UserRepository {
 	}
 }
 
-func (r *postgresUserRepository) FetchAll() ([]domain.User, error) {
+func (r *postgresUserRepository) FetchAll(ctx context.Context) ([]domain.User, error) {
 	var users []domain.User
 	q := `
 		SELECT * 
@@ -24,7 +25,7 @@ func (r *postgresUserRepository) FetchAll() ([]domain.User, error) {
 		WHERE deleted_at IS NULL;
 	`
 
-	rows, err := r.Conn.Query(q)
+	rows, err := r.Conn.QueryContext(ctx, q)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +51,7 @@ func (r *postgresUserRepository) FetchAll() ([]domain.User, error) {
 	return users, nil
 }
 
-func (r *postgresUserRepository) FetchByName(name string) (domain.User, error) {
+func (r *postgresUserRepository) FetchByName(ctx context.Context, name string) (domain.User, error) {
 	var user domain.User
 	q := `
 		SELECT * 
@@ -59,7 +60,7 @@ func (r *postgresUserRepository) FetchByName(name string) (domain.User, error) {
 		AND deleted_at IS NULL;
 	`
 
-	err := r.Conn.QueryRow(q, name).Scan(
+	err := r.Conn.QueryRowContext(ctx, q, name).Scan(
 		&user.Id,
 		&user.Name,
 		&user.Phone,

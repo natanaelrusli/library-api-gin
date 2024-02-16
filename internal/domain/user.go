@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"database/sql"
 	"time"
 )
@@ -17,11 +18,11 @@ type User struct {
 }
 
 type UserUsecase interface {
-	FetchAll() ([]User, error)
-	FetchByName(name string) (User, error)
+	FetchAll(ctx context.Context) ([]User, error)
+	FetchByName(ctx context.Context, name string) (User, error)
 }
 
 type UserRepository interface {
-	FetchAll() ([]User, error)
-	FetchByName(name string) (User, error)
+	FetchAll(ctx context.Context) ([]User, error)
+	FetchByName(ctx context.Context, name string) (User, error)
 }
