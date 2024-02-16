@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"time"
 
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
@@ -18,8 +19,8 @@ func NewBookUsecase(br domain.BookRepository, ar domain.AuthorRepository) domain
 	}
 }
 
-func (u *bookUsecase) FetchAll() ([]domain.Book, error) {
-	books, err := u.bookRepo.FetchAll()
+func (u *bookUsecase) FetchAll(ctx context.Context) ([]domain.Book, error) {
+	books, err := u.bookRepo.FetchAll(ctx)
 
 	if err != nil {
 		return nil, err
@@ -28,8 +29,8 @@ func (u *bookUsecase) FetchAll() ([]domain.Book, error) {
 	return books, nil
 }
 
-func (u *bookUsecase) GetByID(id int) (domain.Book, error) {
-	book, err := u.bookRepo.GetByID(id)
+func (u *bookUsecase) GetByID(ctx context.Context, id int) (domain.Book, error) {
+	book, err := u.bookRepo.GetByID(ctx, id)
 
 	if err != nil {
 		return domain.Book{}, err
@@ -63,8 +64,8 @@ func (u *bookUsecase) CreateOne(
 	return resultBook, nil
 }
 
-func (u *bookUsecase) GetBookAuthor(id int) (domain.Author, error) {
-	book, err := u.bookRepo.GetByID(id)
+func (u *bookUsecase) GetBookAuthor(ctx context.Context, id int) (domain.Author, error) {
+	book, err := u.bookRepo.GetByID(ctx, id)
 
 	if err != nil {
 		return domain.Author{}, err

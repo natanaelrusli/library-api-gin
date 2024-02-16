@@ -20,41 +20,41 @@ func NewBookHandler(u domain.BookUsecase) *BookHandler {
 	}
 }
 
-func (h *BookHandler) GetAllBooks(c *gin.Context) {
-	c.Header("Content-Type", "application/json")
+func (h *BookHandler) GetAllBooks(ctx *gin.Context) {
+	ctx.Header("Content-Type", "application/json")
 
-	books, err := h.BookUsecase.FetchAll()
+	books, err := h.BookUsecase.FetchAll(ctx)
 	if err != nil {
 		err := customerror.NewCustomError(400, err.Error())
-		c.Error(err)
+		ctx.Error(err)
 		return
 	}
 
-	c.JSON(http.StatusOK, dto.Response{
+	ctx.JSON(http.StatusOK, dto.Response{
 		Message: constants.MessageOK,
 		Data:    books,
 	})
 }
 
-func (h *BookHandler) GetBookByID(c *gin.Context) {
-	c.Header("Content-Type", "application/json")
+func (h *BookHandler) GetBookByID(ctx *gin.Context) {
+	ctx.Header("Content-Type", "application/json")
 	var params dto.GetBookByIdParams
 
-	if err := c.ShouldBindUri(&params); err != nil {
+	if err := ctx.ShouldBindUri(&params); err != nil {
 		err := customerror.NewCustomError(400, err.Error())
-		c.Error(err)
+		ctx.Error(err)
 		return
 	}
 
-	book, err := h.BookUsecase.GetByID(params.ID)
+	book, err := h.BookUsecase.GetByID(ctx, params.ID)
 	if err != nil {
 		err := customerror.NewCustomError(500, err.Error())
-		c.Error(err)
+		ctx.Error(err)
 
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"message": "OK",
 		"data":    book,
 	})
@@ -93,25 +93,25 @@ func (h *BookHandler) CreateOne(c *gin.Context) {
 	})
 }
 
-func (h *BookHandler) GetBookAuthor(c *gin.Context) {
-	c.Header("Content-Type", "application/json")
+func (h *BookHandler) GetBookAuthor(ctx *gin.Context) {
+	ctx.Header("Content-Type", "application/json")
 	var params dto.GetAuthorByBookIdParams
 
-	if err := c.ShouldBindUri(&params); err != nil {
+	if err := ctx.ShouldBindUri(&params); err != nil {
 		err := customerror.NewCustomError(400, err.Error())
-		c.Error(err)
+		ctx.Error(err)
 		return
 	}
 
-	author, err := h.BookUsecase.GetBookAuthor(params.ID)
+	author, err := h.BookUsecase.GetBookAuthor(ctx, params.ID)
 	if err != nil {
 		err := customerror.NewCustomError(500, err.Error())
-		c.Error(err)
+		ctx.Error(err)
 
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"message": "OK",
 		"data":    author,
 	})

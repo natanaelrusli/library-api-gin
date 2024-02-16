@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"context"
 	"database/sql"
 
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
@@ -16,13 +17,13 @@ func NewPostgresBookRepository(conn *sql.DB) domain.BookRepository {
 	}
 }
 
-func (r *postgresBookRepository) FetchAll() (res []domain.Book, err error) {
+func (r *postgresBookRepository) FetchAll(ctx context.Context) (res []domain.Book, err error) {
 	var books []domain.Book
 	q := `
 		SELECT * from books WHERE deleted_at IS NULL;
 	`
 
-	rows, err := r.Conn.Query(q)
+	rows, err := r.Conn.QueryContext(ctx, q)
 	if err != nil {
 		return nil, err
 	}
@@ -48,13 +49,13 @@ func (r *postgresBookRepository) FetchAll() (res []domain.Book, err error) {
 	return books, nil
 }
 
-func (r *postgresBookRepository) GetByID(id int) (domain.Book, error) {
+func (r *postgresBookRepository) GetByID(ctx context.Context, id int) (domain.Book, error) {
 	var book domain.Book
 	q := `
 		SELECT * from books WHERE id = $1 AND deleted_at IS NULL;
 	`
 
-	err := r.Conn.QueryRow(q, id).Scan(
+	err := r.Conn.QueryRowContext(ctx, q, id).Scan(
 		&book.Id,
 		&book.Title,
 		&book.Description,
