@@ -20,17 +20,18 @@ func NewBorrowingRecordHandler(bru domain.BorrowingRecordUsecase) *BorrowingReco
 	}
 }
 
-func (h *BorrowingRecordHandler) Create(c *gin.Context) {
+func (h *BorrowingRecordHandler) Create(ctx *gin.Context) {
 	var req dto.CreateBorrowingRecordRequest
-	err := c.BindJSON(&req)
+	err := ctx.BindJSON(&req)
 	if err != nil {
 		err := customerror.NewCustomError(500, err.Error())
-		c.Error(err)
+		ctx.Error(err)
 
 		return
 	}
 
 	record, err := h.BorrowingRecordUsecase.CreateRecord(
+		ctx,
 		req.UserId,
 		req.BookId,
 		req.Status,
@@ -38,27 +39,26 @@ func (h *BorrowingRecordHandler) Create(c *gin.Context) {
 
 	if err != nil {
 		err := customerror.NewCustomError(http.StatusBadRequest, err.Error())
-		c.Error(err)
+		ctx.Error(err)
 
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"message": constants.MessageOK,
 		"data":    record,
 	})
 }
 
-func (h *BorrowingRecordHandler) GetAllBorrowed(c *gin.Context) {
-	records, err := h.BorrowingRecordUsecase.GetAllBorrowedRecord()
+func (h *BorrowingRecordHandler) GetAllBorrowed(ctx *gin.Context) {
+	records, err := h.BorrowingRecordUsecase.GetAllBorrowedRecord(ctx)
 	if err != nil {
 		err := customerror.NewCustomError(http.StatusInternalServerError, err.Error())
-		c.Error(err)
-
+		ctx.Error(err)
 		return
 	}
 
-	c.JSON(http.StatusOK, dto.Response{
+	ctx.JSON(http.StatusOK, dto.Response{
 		Message: constants.MessageOK,
 		Data:    records,
 	})

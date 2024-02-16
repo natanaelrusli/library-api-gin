@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"context"
 	"database/sql"
 
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
@@ -16,7 +17,7 @@ func NewBorrowingRecordRepository(conn *sql.DB) domain.BorrowingRecordRepository
 	}
 }
 
-func (r *postgresBorrowingRecordRepository) CreateRecord(record domain.BorrowingRecord) (domain.BorrowingRecord, error) {
+func (r *postgresBorrowingRecordRepository) CreateRecord(ctx context.Context, record domain.BorrowingRecord) (domain.BorrowingRecord, error) {
 	var createdRecord domain.BorrowingRecord
 
 	q := `
@@ -28,7 +29,7 @@ func (r *postgresBorrowingRecordRepository) CreateRecord(record domain.Borrowing
 		id, user_id, book_id, status, borrowing_date, returning_date, created_at, updated_at, deleted_at;
 	`
 
-	err := r.Conn.QueryRow(q,
+	err := r.Conn.QueryRowContext(ctx, q,
 		&record.UserId,
 		&record.BookId,
 		&record.Status,
@@ -56,16 +57,16 @@ func (r *postgresBorrowingRecordRepository) CreateRecord(record domain.Borrowing
 	return createdRecord, nil
 }
 
-func (r *postgresBorrowingRecordRepository) GetAllBorrowedRecord() ([]domain.BorrowingRecord, error) {
+func (r *postgresBorrowingRecordRepository) GetAllBorrowedRecord(ctx context.Context) ([]domain.BorrowingRecord, error) {
 	var records []domain.BorrowingRecord
 	q := `
 		SELECT * 
 		FROM borrowing_records
 		WHERE status = 'BORROWED' 
-		AND deleted_at IS NULL
+		AND deleted_at IS NULL;	
 	`
 
-	rows, err := r.Conn.Query(q)
+	rows, err := r.Conn.QueryContext(ctx, q)
 
 	if err != nil {
 		return nil, err

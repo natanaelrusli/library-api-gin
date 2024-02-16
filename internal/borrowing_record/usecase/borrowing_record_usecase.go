@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"database/sql"
 	"time"
 
@@ -17,7 +18,7 @@ func NewBorrowingRecordUsecase(brr domain.BorrowingRecordRepository) domain.Borr
 	}
 }
 
-func (u *borrowingRecordUsecase) CreateRecord(userId int, bookId int, status string) (domain.BorrowingRecord, error) {
+func (u *borrowingRecordUsecase) CreateRecord(ctx context.Context, userId int, bookId int, status string) (domain.BorrowingRecord, error) {
 	record := domain.BorrowingRecord{
 		UserId:        userId,
 		BookId:        bookId,
@@ -29,7 +30,7 @@ func (u *borrowingRecordUsecase) CreateRecord(userId int, bookId int, status str
 		DeletedAt:     sql.NullTime{},
 	}
 
-	record, err := u.borrowingRecordRepo.CreateRecord(record)
+	record, err := u.borrowingRecordRepo.CreateRecord(ctx, record)
 	if err != nil {
 		return domain.BorrowingRecord{}, err
 	}
@@ -37,8 +38,8 @@ func (u *borrowingRecordUsecase) CreateRecord(userId int, bookId int, status str
 	return record, nil
 }
 
-func (u *borrowingRecordUsecase) GetAllBorrowedRecord() ([]domain.BorrowingRecord, error) {
-	records, err := u.borrowingRecordRepo.GetAllBorrowedRecord()
+func (u *borrowingRecordUsecase) GetAllBorrowedRecord(ctx context.Context) ([]domain.BorrowingRecord, error) {
+	records, err := u.borrowingRecordRepo.GetAllBorrowedRecord(ctx)
 	if err != nil {
 		return nil, err
 	}

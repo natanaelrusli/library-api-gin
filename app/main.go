@@ -29,6 +29,8 @@ func main() {
 	r := gin.Default()
 	r.Use(middleware.Logger())
 	r.Use(middleware.GlobalErrorHandler())
+	r.ContextWithFallback = true
+
 	config, err := config.InitConfig()
 	if err != nil {
 		log.Fatalln(err)

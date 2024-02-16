@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"database/sql"
 	"time"
 )
@@ -18,11 +19,11 @@ type BorrowingRecord struct {
 }
 
 type BorrowingRecordUsecase interface {
-	CreateRecord(userId int, bookId int, status string) (BorrowingRecord, error)
-	GetAllBorrowedRecord() ([]BorrowingRecord, error)
+	CreateRecord(ctx context.Context, userId int, bookId int, status string) (BorrowingRecord, error)
+	GetAllBorrowedRecord(ctx context.Context) ([]BorrowingRecord, error)
 }
 
 type BorrowingRecordRepository interface {
-	CreateRecord(record BorrowingRecord) (BorrowingRecord, error)
-	GetAllBorrowedRecord() ([]BorrowingRecord, error)
+	CreateRecord(ctx context.Context, record BorrowingRecord) (BorrowingRecord, error)
+	GetAllBorrowedRecord(ctx context.Context) ([]BorrowingRecord, error)
 }
