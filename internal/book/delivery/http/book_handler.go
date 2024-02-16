@@ -60,19 +60,20 @@ func (h *BookHandler) GetBookByID(ctx *gin.Context) {
 	})
 }
 
-func (h *BookHandler) CreateOne(c *gin.Context) {
-	c.Header("Content-Type", "application/json")
+func (h *BookHandler) CreateOne(ctx *gin.Context) {
+	ctx.Header("Content-Type", "application/json")
 	var req dto.CreateOneBookRequest
 
-	err := c.BindJSON(&req)
+	err := ctx.BindJSON(&req)
 	if err != nil {
 		err := customerror.NewCustomError(500, err.Error())
-		c.Error(err)
+		ctx.Error(err)
 
 		return
 	}
 
 	book, err := h.BookUsecase.CreateOne(
+		ctx,
 		req.Title,
 		req.Description,
 		req.Cover,
@@ -82,12 +83,12 @@ func (h *BookHandler) CreateOne(c *gin.Context) {
 
 	if err != nil {
 		err := customerror.NewCustomError(500, err.Error())
-		c.Error(err)
+		ctx.Error(err)
 
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"message": "OK",
 		"data":    book,
 	})
@@ -117,17 +118,17 @@ func (h *BookHandler) GetBookAuthor(ctx *gin.Context) {
 	})
 }
 
-func (h *BookHandler) GetAllBooksWithAuthor(c *gin.Context) {
-	c.Header("Content-Type", "application/json")
+func (h *BookHandler) GetAllBooksWithAuthor(ctx *gin.Context) {
+	ctx.Header("Content-Type", "application/json")
 
-	books, err := h.BookUsecase.FetchAllWithAuthor()
+	books, err := h.BookUsecase.FetchAllWithAuthor(ctx)
 	if err != nil {
 		err := customerror.NewCustomError(400, err.Error())
-		c.Error(err)
+		ctx.Error(err)
 		return
 	}
 
-	c.JSON(http.StatusOK, dto.Response{
+	ctx.JSON(http.StatusOK, dto.Response{
 		Message: constants.MessageOK,
 		Data:    books,
 	})

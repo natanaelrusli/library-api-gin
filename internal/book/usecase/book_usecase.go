@@ -40,6 +40,7 @@ func (u *bookUsecase) GetByID(ctx context.Context, id int) (domain.Book, error) 
 }
 
 func (u *bookUsecase) CreateOne(
+	ctx context.Context,
 	title string,
 	description string,
 	cover string,
@@ -56,7 +57,7 @@ func (u *bookUsecase) CreateOne(
 	book.UpdatedAt = time.Now()
 	book.CreatedAt = time.Now()
 
-	resultBook, err := u.bookRepo.CreateOne(book)
+	resultBook, err := u.bookRepo.CreateOne(ctx, book)
 	if err != nil {
 		return domain.Book{}, err
 	}
@@ -80,8 +81,8 @@ func (u *bookUsecase) GetBookAuthor(ctx context.Context, id int) (domain.Author,
 	return author, nil
 }
 
-func (u *bookUsecase) FetchAllWithAuthor() ([]domain.BookWithAuthor, error) {
-	books, err := u.bookRepo.FetchAllWithAuthor()
+func (u *bookUsecase) FetchAllWithAuthor(ctx context.Context) ([]domain.BookWithAuthor, error) {
+	books, err := u.bookRepo.FetchAllWithAuthor(ctx)
 
 	if err != nil {
 		return []domain.BookWithAuthor{}, err

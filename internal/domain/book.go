@@ -35,6 +35,7 @@ type BookUsecase interface {
 	FetchAll(ctx context.Context) ([]Book, error)
 	GetByID(ctx context.Context, id int) (Book, error)
 	CreateOne(
+		ctx context.Context,
 		title string,
 		description string,
 		cover string,
@@ -42,12 +43,12 @@ type BookUsecase interface {
 		stock int32,
 	) (Book, error)
 	GetBookAuthor(ctx context.Context, id int) (Author, error)
-	FetchAllWithAuthor() ([]BookWithAuthor, error)
+	FetchAllWithAuthor(ctx context.Context) ([]BookWithAuthor, error)
 }
 
 type BookRepository interface {
 	FetchAll(ctx context.Context) ([]Book, error)
 	GetByID(ctx context.Context, id int) (Book, error)
-	CreateOne(book Book) (Book, error)
-	FetchAllWithAuthor() ([]BookWithAuthor, error)
+	CreateOne(ctx context.Context, book Book) (Book, error)
+	FetchAllWithAuthor(ctx context.Context) ([]BookWithAuthor, error)
 }

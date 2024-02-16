@@ -73,7 +73,7 @@ func (r *postgresBookRepository) GetByID(ctx context.Context, id int) (domain.Bo
 	return book, nil
 }
 
-func (r *postgresBookRepository) CreateOne(book domain.Book) (domain.Book, error) {
+func (r *postgresBookRepository) CreateOne(ctx context.Context, book domain.Book) (domain.Book, error) {
 	q := `
 		INSERT INTO books (
 			title,
@@ -87,7 +87,7 @@ func (r *postgresBookRepository) CreateOne(book domain.Book) (domain.Book, error
 		RETURNING id, title, description, cover, author_id, stock, updated_at, created_at, deleted_at;
 	`
 
-	result := r.Conn.QueryRow(q,
+	result := r.Conn.QueryRowContext(ctx, q,
 		book.Title,
 		book.Description,
 		book.Cover,
@@ -117,7 +117,7 @@ func (r *postgresBookRepository) CreateOne(book domain.Book) (domain.Book, error
 	return resultBook, nil
 }
 
-func (r *postgresBookRepository) FetchAllWithAuthor() ([]domain.BookWithAuthor, error) {
+func (r *postgresBookRepository) FetchAllWithAuthor(ctx context.Context) ([]domain.BookWithAuthor, error) {
 	var booksWithAuthor []domain.BookWithAuthor
 	q := `
 		SELECT 
@@ -136,7 +136,7 @@ func (r *postgresBookRepository) FetchAllWithAuthor() ([]domain.BookWithAuthor, 
 		WHERE b.deleted_at IS NULL;
 	`
 
-	rows, err := r.Conn.Query(q)
+	rows, err := r.Conn.QueryContext(ctx, q)
 	if err != nil {
 		return nil, err
 	}
