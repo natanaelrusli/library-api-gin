@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"context"
 	"database/sql"
 	"testing"
 	"time"
@@ -10,6 +11,7 @@ import (
 )
 
 func TestGetByID(t *testing.T) {
+	var ctx context.Context
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("error creating mock database: %v", err)
@@ -30,7 +32,7 @@ func TestGetByID(t *testing.T) {
 		WithArgs(1).
 		WillReturnRows(expectedRows)
 
-	result, err := repo.GetByID(1)
+	result, err := repo.GetByID(ctx, 1)
 
 	if err != nil {
 		t.Fatalf("error calling GetByID: %v", err)

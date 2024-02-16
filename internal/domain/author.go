@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"context"
 	"database/sql"
 	"time"
 )
@@ -14,5 +15,5 @@ type Author struct {
 }
 
 type AuthorRepository interface {
-	GetByID(id int64) (Author, error)
+	GetByID(ctx context.Context, id int64) (Author, error)
 }

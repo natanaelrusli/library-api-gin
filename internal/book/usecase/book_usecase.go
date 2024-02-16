@@ -72,7 +72,7 @@ func (u *bookUsecase) GetBookAuthor(ctx context.Context, id int) (domain.Author,
 		return domain.Author{}, err
 	}
 
-	author, err := u.authorRepo.GetByID(int64(book.AuthorID))
+	author, err := u.authorRepo.GetByID(ctx, int64(book.AuthorID))
 
 	if err != nil {
 		return domain.Author{}, err

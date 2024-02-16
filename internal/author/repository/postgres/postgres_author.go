@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"context"
 	"database/sql"
 
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
@@ -16,7 +17,7 @@ func NewPostgresAuthorRepository(conn *sql.DB) domain.AuthorRepository {
 	}
 }
 
-func (r *postgresAuthorRepository) GetByID(id int64) (domain.Author, error) {
+func (r *postgresAuthorRepository) GetByID(ctx context.Context, id int64) (domain.Author, error) {
 	var author domain.Author
 	q := `
 		SELECT * from authors
@@ -24,7 +25,7 @@ func (r *postgresAuthorRepository) GetByID(id int64) (domain.Author, error) {
 		AND id = $1;
 	`
 
-	rows := r.Conn.QueryRow(q, id)
+	rows := r.Conn.QueryRowContext(ctx, q, id)
 	if rows.Err() != nil {
 		return domain.Author{}, rows.Err()
 	}
