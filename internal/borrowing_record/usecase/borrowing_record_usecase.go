@@ -9,6 +9,7 @@ import (
 	"github.com/natanaelrusli/library-api-gin/internal/constants"
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
 	"github.com/natanaelrusli/library-api-gin/internal/dto"
+	"github.com/natanaelrusli/library-api-gin/internal/pkg/apperror"
 )
 
 type borrowingRecordUsecase struct {
@@ -101,7 +102,12 @@ func (u *borrowingRecordUsecase) Borrow(ctx context.Context, userId int, bookId 
 func (u *borrowingRecordUsecase) GetById(ctx context.Context, id int) (domain.BorrowingRecord, error) {
 	record, err := u.borrowingRecordRepo.GetById(ctx, id)
 	if err != nil {
-		return domain.BorrowingRecord{}, err
+		switch err {
+		case sql.ErrNoRows:
+			return domain.BorrowingRecord{}, apperror.NewNotFoundError(nil, "borrowing record")
+		default:
+			return domain.BorrowingRecord{}, err
+		}
 	}
 
 	return record, nil
