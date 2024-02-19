@@ -16,7 +16,7 @@ import (
 )
 
 func TestNewBorrowingRecordHandler(t *testing.T) {
-	dep := NewBorrowingRecordHandler(nil)
+	dep := NewBorrowingRecordHandler(nil, nil)
 	assert.NotNil(t, dep)
 }
 func TestGetAllBorrowed(t *testing.T) {
