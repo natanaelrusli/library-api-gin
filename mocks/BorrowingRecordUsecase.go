@@ -100,6 +100,62 @@ func (_m *BorrowingRecordUsecase) GetAllBorrowedRecord(ctx context.Context) ([]d
 	return r0, r1
 }
 
+// GetById provides a mock function with given fields: ctx, id
+func (_m *BorrowingRecordUsecase) GetById(ctx context.Context, id int) (domain.BorrowingRecord, error) {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetById")
+	}
+
+	var r0 domain.BorrowingRecord
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) (domain.BorrowingRecord, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int) domain.BorrowingRecord); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Get(0).(domain.BorrowingRecord)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Return provides a mock function with given fields: ctx, borrowId
+func (_m *BorrowingRecordUsecase) Return(ctx context.Context, borrowId int) (domain.BorrowingRecord, error) {
+	ret := _m.Called(ctx, borrowId)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Return")
+	}
+
+	var r0 domain.BorrowingRecord
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int) (domain.BorrowingRecord, error)); ok {
+		return rf(ctx, borrowId)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int) domain.BorrowingRecord); ok {
+		r0 = rf(ctx, borrowId)
+	} else {
+		r0 = ret.Get(0).(domain.BorrowingRecord)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = rf(ctx, borrowId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // NewBorrowingRecordUsecase creates a new instance of BorrowingRecordUsecase. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewBorrowingRecordUsecase(t interface {

@@ -21,10 +21,13 @@ type BorrowingRecord struct {
 type BorrowingRecordUsecase interface {
 	CreateRecord(ctx context.Context, userId int, bookId int, status string) (BorrowingRecord, error)
 	GetAllBorrowedRecord(ctx context.Context) ([]BorrowingRecord, error)
+	GetById(ctx context.Context, id int) (BorrowingRecord, error)
 	Borrow(ctx context.Context, userId int, bookId int, amount int) (BorrowingRecord, error)
+	Return(ctx context.Context, borrowId int) (BorrowingRecord, error)
 }
 
 type BorrowingRecordRepository interface {
 	CreateRecord(ctx context.Context, record BorrowingRecord) (BorrowingRecord, error)
 	GetAllBorrowedRecord(ctx context.Context) ([]BorrowingRecord, error)
+	GetById(ctx context.Context, id int) (BorrowingRecord, error)
 }

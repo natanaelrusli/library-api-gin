@@ -97,3 +97,17 @@ func (u *borrowingRecordUsecase) Borrow(ctx context.Context, userId int, bookId 
 
 	return record, nil
 }
+
+func (u *borrowingRecordUsecase) GetById(ctx context.Context, id int) (domain.BorrowingRecord, error) {
+	record, err := u.borrowingRecordRepo.GetById(ctx, id)
+	if err != nil {
+		return domain.BorrowingRecord{}, err
+	}
+
+	return record, nil
+}
+
+func (u *borrowingRecordUsecase) Return(ctx context.Context, borrowId int) (domain.BorrowingRecord, error) {
+
+	return domain.BorrowingRecord{}, nil
+}

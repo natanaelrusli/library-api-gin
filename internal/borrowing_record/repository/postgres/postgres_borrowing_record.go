@@ -94,3 +94,37 @@ func (r *postgresBorrowingRecordRepository) GetAllBorrowedRecord(ctx context.Con
 
 	return records, nil
 }
+
+func (r *postgresBorrowingRecordRepository) GetById(ctx context.Context, id int) (domain.BorrowingRecord, error) {
+	var record domain.BorrowingRecord
+
+	q := `
+		SELECT * 
+		FROM borrowing_records
+		WHERE id = $1
+		AND deleted_at IS NULL;	
+	`
+
+	rows := r.Conn.QueryRowContext(ctx, q, id)
+	if rows.Err() != nil {
+		return domain.BorrowingRecord{}, nil
+	}
+
+	err := rows.Scan(
+		&record.Id,
+		&record.UserId,
+		&record.BookId,
+		&record.Status,
+		&record.BorrowingDate,
+		&record.ReturningDate,
+		&record.CreatedAt,
+		&record.UpdatedAt,
+		&record.DeletedAt,
+	)
+
+	if err != nil {
+		return domain.BorrowingRecord{}, err
+	}
+
+	return record, nil
+}

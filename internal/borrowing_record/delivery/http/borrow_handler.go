@@ -67,6 +67,27 @@ func (h *BorrowingRecordHandler) GetAllBorrowed(ctx *gin.Context) {
 	})
 }
 
+func (h *BorrowingRecordHandler) GetById(ctx *gin.Context) {
+	ctx.Header("Content-Type", "application/json")
+	var params dto.GetBorrowingRecordByIdParams
+
+	if err := ctx.ShouldBindUri(&params); err != nil {
+		err := customerror.NewCustomError(http.StatusBadRequest, err.Error())
+		ctx.Error(err)
+		return
+	}
+
+	record, err := h.BorrowingRecordUsecase.GetById(ctx, params.ID)
+	if err != nil {
+		err := customerror.NewCustomError(http.StatusInternalServerError, err.Error())
+		ctx.Error(err)
+
+		return
+	}
+
+	ctx.JSON(http.StatusOK, record)
+}
+
 func (h *BorrowingRecordHandler) Borrow(ctx *gin.Context) {
 	ctx.Header("Content-Type", "application/json")
 	ctx.Set("user-id", 1)

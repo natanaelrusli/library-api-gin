@@ -67,6 +67,7 @@ func initServer(config *config.Config) *http.Server {
 	r.GET("/users", userHandler.GetUsers)
 
 	r.GET("/borrowing-records/borrowed", borrowingRecordHandler.GetAllBorrowed)
+	r.GET("/borrowing-records/:id", borrowingRecordHandler.GetById)
 	r.POST("/borrowing-records", borrowingRecordHandler.Create)
 
 	r.POST("/borrow", borrowingRecordHandler.Borrow)
