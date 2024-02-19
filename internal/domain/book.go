@@ -4,8 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"time"
-
-	"github.com/natanaelrusli/library-api-gin/internal/dto"
 )
 
 type Book struct {
@@ -53,5 +51,5 @@ type BookRepository interface {
 	GetByID(ctx context.Context, id int) (Book, error)
 	CreateOne(ctx context.Context, book Book) (Book, error)
 	FetchAllWithAuthor(ctx context.Context) ([]BookWithAuthor, error)
-	UpdateStock(ctx context.Context, req dto.BorrowRequest) (Book, error)
+	UpdateStock(ctx context.Context, stock int, bookId int) (Book, error)
 }

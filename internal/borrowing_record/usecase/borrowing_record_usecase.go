@@ -8,7 +8,6 @@ import (
 
 	"github.com/natanaelrusli/library-api-gin/internal/constants"
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
-	"github.com/natanaelrusli/library-api-gin/internal/dto"
 	"github.com/natanaelrusli/library-api-gin/internal/pkg/apperror"
 )
 
@@ -67,13 +66,7 @@ func (u *borrowingRecordUsecase) Borrow(ctx context.Context, userId int, bookId 
 	}
 
 	newAmount := book.Stock - int32(amount)
-
-	req := dto.BorrowRequest{
-		UserId: userId,
-		BookId: bookId,
-		Amount: int(newAmount),
-	}
-	book, err = u.bookRepo.UpdateStock(ctx, req)
+	book, err = u.bookRepo.UpdateStock(ctx, int(newAmount), bookId)
 
 	if err != nil {
 		return domain.BorrowingRecord{}, nil
@@ -99,6 +92,12 @@ func (u *borrowingRecordUsecase) Borrow(ctx context.Context, userId int, bookId 
 	return record, nil
 }
 
+func (u *borrowingRecordUsecase) Return(ctx context.Context, borrowId int) (domain.BorrowingRecord, error) {
+	// record, err := u.bookRepo.UpdateStock(ctx, )
+
+	return domain.BorrowingRecord{}, nil
+}
+
 func (u *borrowingRecordUsecase) GetById(ctx context.Context, id int) (domain.BorrowingRecord, error) {
 	record, err := u.borrowingRecordRepo.GetById(ctx, id)
 	if err != nil {
@@ -111,9 +110,4 @@ func (u *borrowingRecordUsecase) GetById(ctx context.Context, id int) (domain.Bo
 	}
 
 	return record, nil
-}
-
-func (u *borrowingRecordUsecase) Return(ctx context.Context, borrowId int) (domain.BorrowingRecord, error) {
-
-	return domain.BorrowingRecord{}, nil
 }
