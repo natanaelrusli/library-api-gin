@@ -14,6 +14,34 @@ type BorrowingRecordUsecase struct {
 	mock.Mock
 }
 
+// Borrow provides a mock function with given fields: ctx, id, amount
+func (_m *BorrowingRecordUsecase) Borrow(ctx context.Context, id int, amount int) (domain.BorrowingRecord, error) {
+	ret := _m.Called(ctx, id, amount)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Borrow")
+	}
+
+	var r0 domain.BorrowingRecord
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, int, int) (domain.BorrowingRecord, error)); ok {
+		return rf(ctx, id, amount)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, int, int) domain.BorrowingRecord); ok {
+		r0 = rf(ctx, id, amount)
+	} else {
+		r0 = ret.Get(0).(domain.BorrowingRecord)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, int, int) error); ok {
+		r1 = rf(ctx, id, amount)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // CreateRecord provides a mock function with given fields: ctx, userId, bookId, status
 func (_m *BorrowingRecordUsecase) CreateRecord(ctx context.Context, userId int, bookId int, status string) (domain.BorrowingRecord, error) {
 	ret := _m.Called(ctx, userId, bookId, status)

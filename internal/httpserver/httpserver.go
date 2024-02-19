@@ -49,9 +49,9 @@ func initServer(config *config.Config) *http.Server {
 	userRepository := _userRepo.NewPostgresUserRepository(db)
 	borrowingRecordRepository := _borrowingRecordRepo.NewBorrowingRecordRepository(db)
 
-	bookUsecase := bookUsecase.NewBookUsecase(bookRepository, authorRepository)
+	bookUsecase := bookUsecase.NewBookUsecase(bookRepository, authorRepository, borrowingRecordRepository)
 	userUsecase := userUsecase.NewUserUsecase(userRepository)
-	borrowingRecordUsecase := borrowingRecordUsecase.NewBorrowingRecordUsecase(borrowingRecordRepository)
+	borrowingRecordUsecase := borrowingRecordUsecase.NewBorrowingRecordUsecase(borrowingRecordRepository, bookRepository)
 
 	bookHandler := bookHandler.NewBookHandler(bookUsecase)
 	userHandler := userHandler.NewUserHandler(userUsecase)

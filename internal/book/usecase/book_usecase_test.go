@@ -12,7 +12,7 @@ import (
 )
 
 func TestNewBookUsecase(t *testing.T) {
-	dep := NewBookUsecase(nil, nil)
+	dep := NewBookUsecase(nil, nil, nil)
 	assert.NotNil(t, dep)
 }
 

@@ -6,6 +6,8 @@ import (
 	context "context"
 
 	domain "github.com/natanaelrusli/library-api-gin/internal/domain"
+	dto "github.com/natanaelrusli/library-api-gin/internal/dto"
+
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -123,6 +125,34 @@ func (_m *BookRepository) GetByID(ctx context.Context, id int) (domain.Book, err
 
 	if rf, ok := ret.Get(1).(func(context.Context, int) error); ok {
 		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// UpdateStock provides a mock function with given fields: ctx, req
+func (_m *BookRepository) UpdateStock(ctx context.Context, req dto.UpdateBookStockRequest) (domain.Book, error) {
+	ret := _m.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateStock")
+	}
+
+	var r0 domain.Book
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, dto.UpdateBookStockRequest) (domain.Book, error)); ok {
+		return rf(ctx, req)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, dto.UpdateBookStockRequest) domain.Book); ok {
+		r0 = rf(ctx, req)
+	} else {
+		r0 = ret.Get(0).(domain.Book)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, dto.UpdateBookStockRequest) error); ok {
+		r1 = rf(ctx, req)
 	} else {
 		r1 = ret.Error(1)
 	}

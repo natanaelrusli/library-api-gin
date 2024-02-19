@@ -79,7 +79,7 @@ func (h *BorrowingRecordHandler) Borrow(ctx *gin.Context) {
 		return
 	}
 
-	book, err := h.BookUsecase.Borrow(ctx, req.BookId, req.Amount)
+	record, err := h.BorrowingRecordUsecase.Borrow(ctx, req.BookId, req.Amount)
 	if err != nil {
 		err := customerror.NewCustomError(http.StatusConflict, err.Error())
 		ctx.Error(err)
@@ -87,8 +87,5 @@ func (h *BorrowingRecordHandler) Borrow(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, httpdto.UpdateStockResponse{
-		Id:    book.Id,
-		Stock: int(book.Stock),
-	})
+	ctx.JSON(http.StatusOK, record)
 }

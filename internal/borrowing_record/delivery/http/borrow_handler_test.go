@@ -22,6 +22,7 @@ func TestNewBorrowingRecordHandler(t *testing.T) {
 func TestGetAllBorrowed(t *testing.T) {
 	type fields struct {
 		borrowingRecordUsecase *mocks.BorrowingRecordUsecase
+		bookUsecase            *mocks.BookUsecase
 	}
 
 	tests := []struct {
@@ -65,10 +66,12 @@ func TestGetAllBorrowed(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			mockDep := fields{
 				borrowingRecordUsecase: mocks.NewBorrowingRecordUsecase(t),
+				bookUsecase:            mocks.NewBookUsecase(t),
 			}
 
 			h := &BorrowingRecordHandler{
 				BorrowingRecordUsecase: mockDep.borrowingRecordUsecase,
+				BookUsecase:            mockDep.bookUsecase,
 			}
 
 			w := httptest.NewRecorder()

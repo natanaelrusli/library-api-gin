@@ -46,7 +46,6 @@ type BookUsecase interface {
 	) (Book, error)
 	GetBookAuthor(ctx context.Context, id int) (Author, error)
 	FetchAllWithAuthor(ctx context.Context) ([]BookWithAuthor, error)
-	Borrow(ctx context.Context, id int, amount int) (Book, error)
 }
 
 type BookRepository interface {
