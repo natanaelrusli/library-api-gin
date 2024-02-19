@@ -164,7 +164,7 @@ func (r *postgresBookRepository) FetchAllWithAuthor(ctx context.Context) ([]doma
 	return booksWithAuthor, nil
 }
 
-func (r *postgresBookRepository) UpdateStock(ctx context.Context, req dto.UpdateBookStockRequest) (domain.Book, error) {
+func (r *postgresBookRepository) UpdateStock(ctx context.Context, req dto.BorrowRequest) (domain.Book, error) {
 	var book domain.Book
 
 	q := `

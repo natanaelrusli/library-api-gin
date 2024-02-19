@@ -69,8 +69,9 @@ func (h *BorrowingRecordHandler) GetAllBorrowed(ctx *gin.Context) {
 
 func (h *BorrowingRecordHandler) Borrow(ctx *gin.Context) {
 	ctx.Header("Content-Type", "application/json")
+	ctx.Set("user-id", 1)
 
-	var req dto.UpdateBookStockRequest
+	var req dto.BorrowRequest
 	err := ctx.BindJSON(&req)
 	if err != nil {
 		err := customerror.NewCustomError(http.StatusInternalServerError, err.Error())
@@ -79,7 +80,7 @@ func (h *BorrowingRecordHandler) Borrow(ctx *gin.Context) {
 		return
 	}
 
-	record, err := h.BorrowingRecordUsecase.Borrow(ctx, req.BookId, req.Amount)
+	record, err := h.BorrowingRecordUsecase.Borrow(ctx, req.UserId, req.BookId, req.Amount)
 	if err != nil {
 		err := customerror.NewCustomError(http.StatusConflict, err.Error())
 		ctx.Error(err)

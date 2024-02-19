@@ -133,7 +133,7 @@ func (_m *BookRepository) GetByID(ctx context.Context, id int) (domain.Book, err
 }
 
 // UpdateStock provides a mock function with given fields: ctx, req
-func (_m *BookRepository) UpdateStock(ctx context.Context, req dto.UpdateBookStockRequest) (domain.Book, error) {
+func (_m *BookRepository) UpdateStock(ctx context.Context, req dto.BorrowRequest) (domain.Book, error) {
 	ret := _m.Called(ctx, req)
 
 	if len(ret) == 0 {
@@ -142,16 +142,16 @@ func (_m *BookRepository) UpdateStock(ctx context.Context, req dto.UpdateBookSto
 
 	var r0 domain.Book
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, dto.UpdateBookStockRequest) (domain.Book, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, dto.BorrowRequest) (domain.Book, error)); ok {
 		return rf(ctx, req)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, dto.UpdateBookStockRequest) domain.Book); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, dto.BorrowRequest) domain.Book); ok {
 		r0 = rf(ctx, req)
 	} else {
 		r0 = ret.Get(0).(domain.Book)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, dto.UpdateBookStockRequest) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, dto.BorrowRequest) error); ok {
 		r1 = rf(ctx, req)
 	} else {
 		r1 = ret.Error(1)

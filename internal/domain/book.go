@@ -53,5 +53,5 @@ type BookRepository interface {
 	GetByID(ctx context.Context, id int) (Book, error)
 	CreateOne(ctx context.Context, book Book) (Book, error)
 	FetchAllWithAuthor(ctx context.Context) ([]BookWithAuthor, error)
-	UpdateStock(ctx context.Context, req dto.UpdateBookStockRequest) (Book, error)
+	UpdateStock(ctx context.Context, req dto.BorrowRequest) (Book, error)
 }

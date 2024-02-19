@@ -52,10 +52,10 @@ func (u *borrowingRecordUsecase) GetAllBorrowedRecord(ctx context.Context) ([]do
 	return records, nil
 }
 
-func (u *borrowingRecordUsecase) Borrow(ctx context.Context, id int, amount int) (domain.BorrowingRecord, error) {
+func (u *borrowingRecordUsecase) Borrow(ctx context.Context, userId int, bookId int, amount int) (domain.BorrowingRecord, error) {
 	// check stock availability
-	book, err := u.bookRepo.GetByID(ctx, id)
-	userId := 1
+	book, err := u.bookRepo.GetByID(ctx, bookId)
+	// userId := ctx.Value("user-id")
 
 	if err != nil {
 		return domain.BorrowingRecord{}, err
@@ -67,8 +67,9 @@ func (u *borrowingRecordUsecase) Borrow(ctx context.Context, id int, amount int)
 
 	newAmount := book.Stock - int32(amount)
 
-	req := dto.UpdateBookStockRequest{
-		BookId: id,
+	req := dto.BorrowRequest{
+		UserId: userId,
+		BookId: bookId,
 		Amount: int(newAmount),
 	}
 	book, err = u.bookRepo.UpdateStock(ctx, req)
@@ -80,7 +81,7 @@ func (u *borrowingRecordUsecase) Borrow(ctx context.Context, id int, amount int)
 	// create borrowing record
 	record := domain.BorrowingRecord{
 		UserId:        userId,
-		BookId:        id,
+		BookId:        bookId,
 		Status:        constants.Borrowed,
 		BorrowingDate: time.Now(),
 		ReturningDate: sql.NullTime{},
