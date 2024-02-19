@@ -5,6 +5,7 @@ import (
 	"database/sql"
 
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
+	"github.com/natanaelrusli/library-api-gin/internal/dto"
 )
 
 type postgresBookRepository struct {
@@ -161,4 +162,32 @@ func (r *postgresBookRepository) FetchAllWithAuthor(ctx context.Context) ([]doma
 	}
 
 	return booksWithAuthor, nil
+}
+
+func (r *postgresBookRepository) UpdateStock(ctx context.Context, req dto.UpdateBookStockRequest) (domain.Book, error) {
+	var book domain.Book
+
+	q := `
+		UPDATE books
+		SET stock = $1
+		WHERE id = $2
+		RETURNING *;
+	`
+	err := r.Conn.QueryRowContext(ctx, q, req.Amount, req.BookId).Scan(
+		&book.Id,
+		&book.Title,
+		&book.Description,
+		&book.Cover,
+		&book.CreatedAt,
+		&book.UpdatedAt,
+		&book.DeletedAt,
+		&book.AuthorID,
+		&book.Stock,
+	)
+
+	if err != nil {
+		return domain.Book{}, err
+	}
+
+	return book, nil
 }

@@ -3,9 +3,11 @@ package usecase
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
+	"github.com/natanaelrusli/library-api-gin/internal/dto"
 	"github.com/natanaelrusli/library-api-gin/internal/pkg/apperror"
 )
 
@@ -91,4 +93,30 @@ func (u *bookUsecase) FetchAllWithAuthor(ctx context.Context) ([]domain.BookWith
 	}
 
 	return books, nil
+}
+
+func (u *bookUsecase) DecreaseStock(ctx context.Context, id int, amount int) (domain.Book, error) {
+	// check stock availability
+	book, err := u.bookRepo.GetByID(ctx, id)
+	if err != nil {
+		return domain.Book{}, err
+	}
+
+	if book.Stock < int32(amount) {
+		return domain.Book{}, errors.New("book stock not enough")
+	}
+
+	newAmount := book.Stock - int32(amount)
+
+	req := dto.UpdateBookStockRequest{
+		BookId: id,
+		Amount: int(newAmount),
+	}
+	book, err = u.bookRepo.UpdateStock(ctx, req)
+
+	if err != nil {
+		return domain.Book{}, nil
+	}
+
+	return book, nil
 }

@@ -13,3 +13,8 @@ type CreateBorrowingRecordRequest struct {
 	BookId int    `json:"book_id" binding:"required"`
 	Status string `json:"status" binding:"required"`
 }
+
+type UpdateBookStockRequest struct {
+	BookId int `json:"book_id" binding:"required"`
+	Amount int `json:"amount" binding:"required"`
+}

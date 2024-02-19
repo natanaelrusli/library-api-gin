@@ -7,7 +7,7 @@ import (
 	"github.com/natanaelrusli/library-api-gin/internal/constants"
 	"github.com/natanaelrusli/library-api-gin/internal/customerror"
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
-	"github.com/natanaelrusli/library-api-gin/internal/dto"
+	"github.com/natanaelrusli/library-api-gin/internal/dto/httpdto"
 )
 
 type UserHandler struct {
@@ -32,7 +32,7 @@ func (h *UserHandler) GetUsers(ctx *gin.Context) {
 			return
 		}
 
-		ctx.JSON(http.StatusOK, dto.Response{
+		ctx.JSON(http.StatusOK, httpdto.Response{
 			Message: constants.MessageOK,
 			Data:    users,
 		})
@@ -51,7 +51,7 @@ func (h *UserHandler) GetUsers(ctx *gin.Context) {
 			return
 		}
 
-		ctx.JSON(http.StatusOK, dto.Response{
+		ctx.JSON(http.StatusOK, httpdto.Response{
 			Message: constants.MessageOK,
 			Data:    user,
 		})

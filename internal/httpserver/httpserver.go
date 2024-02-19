@@ -14,6 +14,7 @@ import (
 
 	"github.com/natanaelrusli/library-api-gin/internal/config"
 	"github.com/natanaelrusli/library-api-gin/internal/dto"
+	"github.com/natanaelrusli/library-api-gin/internal/dto/httpdto"
 	"github.com/natanaelrusli/library-api-gin/internal/middleware"
 	"github.com/natanaelrusli/library-api-gin/internal/pkg/database"
 
@@ -54,7 +55,7 @@ func initServer(config *config.Config) *http.Server {
 
 	bookHandler := bookHandler.NewBookHandler(bookUsecase)
 	userHandler := userHandler.NewUserHandler(userUsecase)
-	borrowingRecordHandler := borrowingRecordHandler.NewBorrowingRecordHandler(borrowingRecordUsecase)
+	borrowingRecordHandler := borrowingRecordHandler.NewBorrowingRecordHandler(borrowingRecordUsecase, bookUsecase)
 
 	r.GET("/books", bookHandler.GetAllBooks)
 	r.GET("/books/:id", bookHandler.GetBookByID)
@@ -68,13 +69,15 @@ func initServer(config *config.Config) *http.Server {
 	r.GET("/borrowing-records/borrowed", borrowingRecordHandler.GetAllBorrowed)
 	r.POST("/borrowing-records", borrowingRecordHandler.Create)
 
+	r.POST("/borrow", borrowingRecordHandler.Borrow)
+
 	r.GET("/ping", func(ctx *gin.Context) {
 		var query dto.Query
 		if err := ctx.ShouldBindQuery(&query); err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, query)
 		}
 
-		ctx.JSON(200, dto.Response{
+		ctx.JSON(200, httpdto.Response{
 			Message: "PONG!!!",
 			Data:    query.Name,
 		})
