@@ -2,9 +2,11 @@ package usecase
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
+	"github.com/natanaelrusli/library-api-gin/internal/pkg/apperror"
 )
 
 type bookUsecase struct {
@@ -22,8 +24,8 @@ func NewBookUsecase(br domain.BookRepository, ar domain.AuthorRepository) domain
 func (u *bookUsecase) FetchAll(ctx context.Context) ([]domain.Book, error) {
 	books, err := u.bookRepo.FetchAll(ctx)
 
-	if err != nil {
-		return nil, err
+	if err != nil && err == sql.ErrNoRows {
+		return nil, apperror.NewNotFoundError(nil, "book")
 	}
 
 	return books, nil
@@ -33,7 +35,7 @@ func (u *bookUsecase) GetByID(ctx context.Context, id int) (domain.Book, error) 
 	book, err := u.bookRepo.GetByID(ctx, id)
 
 	if err != nil {
-		return domain.Book{}, err
+		return domain.Book{}, apperror.NewBookNotFoundError()
 	}
 
 	return book, nil
