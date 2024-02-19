@@ -95,7 +95,7 @@ func (u *bookUsecase) FetchAllWithAuthor(ctx context.Context) ([]domain.BookWith
 	return books, nil
 }
 
-func (u *bookUsecase) DecreaseStock(ctx context.Context, id int, amount int) (domain.Book, error) {
+func (u *bookUsecase) Borrow(ctx context.Context, id int, amount int) (domain.Book, error) {
 	// check stock availability
 	book, err := u.bookRepo.GetByID(ctx, id)
 	if err != nil {
