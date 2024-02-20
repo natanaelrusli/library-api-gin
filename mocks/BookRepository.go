@@ -6,8 +6,6 @@ import (
 	context "context"
 
 	domain "github.com/natanaelrusli/library-api-gin/internal/domain"
-	dto "github.com/natanaelrusli/library-api-gin/internal/dto"
-
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -132,9 +130,9 @@ func (_m *BookRepository) GetByID(ctx context.Context, id int) (domain.Book, err
 	return r0, r1
 }
 
-// UpdateStock provides a mock function with given fields: ctx, req
-func (_m *BookRepository) UpdateStock(ctx context.Context, req dto.BorrowRequest) (domain.Book, error) {
-	ret := _m.Called(ctx, req)
+// UpdateStock provides a mock function with given fields: ctx, stock, bookId
+func (_m *BookRepository) UpdateStock(ctx context.Context, stock int, bookId int) (domain.Book, error) {
+	ret := _m.Called(ctx, stock, bookId)
 
 	if len(ret) == 0 {
 		panic("no return value specified for UpdateStock")
@@ -142,17 +140,17 @@ func (_m *BookRepository) UpdateStock(ctx context.Context, req dto.BorrowRequest
 
 	var r0 domain.Book
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, dto.BorrowRequest) (domain.Book, error)); ok {
-		return rf(ctx, req)
+	if rf, ok := ret.Get(0).(func(context.Context, int, int) (domain.Book, error)); ok {
+		return rf(ctx, stock, bookId)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, dto.BorrowRequest) domain.Book); ok {
-		r0 = rf(ctx, req)
+	if rf, ok := ret.Get(0).(func(context.Context, int, int) domain.Book); ok {
+		r0 = rf(ctx, stock, bookId)
 	} else {
 		r0 = ret.Get(0).(domain.Book)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, dto.BorrowRequest) error); ok {
-		r1 = rf(ctx, req)
+	if rf, ok := ret.Get(1).(func(context.Context, int, int) error); ok {
+		r1 = rf(ctx, stock, bookId)
 	} else {
 		r1 = ret.Error(1)
 	}

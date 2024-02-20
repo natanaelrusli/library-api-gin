@@ -93,7 +93,20 @@ func (u *borrowingRecordUsecase) Borrow(ctx context.Context, userId int, bookId 
 }
 
 func (u *borrowingRecordUsecase) Return(ctx context.Context, borrowId int) (domain.BorrowingRecord, error) {
-	// record, err := u.bookRepo.UpdateStock(ctx, )
+	record, err := u.borrowingRecordRepo.GetById(ctx, borrowId)
+	if err != nil {
+		return domain.BorrowingRecord{}, err
+	}
+
+	book, err := u.bookRepo.GetByID(ctx, record.BookId)
+	if err != nil {
+		return domain.BorrowingRecord{}, err
+	}
+
+	_, err = u.bookRepo.UpdateStock(ctx, int(book.Stock+1), record.BookId)
+	if err != nil {
+		return domain.BorrowingRecord{}, err
+	}
 
 	return domain.BorrowingRecord{}, nil
 }

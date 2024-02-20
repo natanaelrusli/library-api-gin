@@ -17,10 +17,11 @@ import (
 	"github.com/natanaelrusli/library-api-gin/internal/dto/httpdto"
 	"github.com/natanaelrusli/library-api-gin/internal/middleware"
 	"github.com/natanaelrusli/library-api-gin/internal/pkg/database"
+	"github.com/natanaelrusli/library-api-gin/internal/repository"
 
 	_authorRepo "github.com/natanaelrusli/library-api-gin/internal/author/repository/postgres"
-	_bookRepo "github.com/natanaelrusli/library-api-gin/internal/book/repository/postgres"
 	_borrowingRecordRepo "github.com/natanaelrusli/library-api-gin/internal/borrowing_record/repository/postgres"
+	_bookRepo "github.com/natanaelrusli/library-api-gin/internal/repository"
 	_userRepo "github.com/natanaelrusli/library-api-gin/internal/user/repository/postgres"
 
 	bookUsecase "github.com/natanaelrusli/library-api-gin/internal/book/usecase"
@@ -44,12 +45,13 @@ func initServer(config *config.Config) *http.Server {
 		log.Fatalln("error connecting to database: ", err)
 	}
 
+	trx := repository.NewSqlTransaction(db)
 	bookRepository := _bookRepo.NewPostgresBookRepository(db)
 	authorRepository := _authorRepo.NewPostgresAuthorRepository(db)
 	userRepository := _userRepo.NewPostgresUserRepository(db)
 	borrowingRecordRepository := _borrowingRecordRepo.NewBorrowingRecordRepository(db)
 
-	bookUsecase := bookUsecase.NewBookUsecase(bookRepository, authorRepository, borrowingRecordRepository)
+	bookUsecase := bookUsecase.NewBookUsecase(bookRepository, authorRepository, borrowingRecordRepository, trx)
 	userUsecase := userUsecase.NewUserUsecase(userRepository)
 	borrowingRecordUsecase := borrowingRecordUsecase.NewBorrowingRecordUsecase(borrowingRecordRepository, bookRepository)
 

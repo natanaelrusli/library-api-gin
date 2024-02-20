@@ -7,22 +7,31 @@ import (
 
 	"github.com/natanaelrusli/library-api-gin/internal/domain"
 	"github.com/natanaelrusli/library-api-gin/internal/pkg/apperror"
+	"github.com/natanaelrusli/library-api-gin/internal/repository"
 )
 
 type bookUsecase struct {
-	bookRepo   domain.BookRepository
-	authorRepo domain.AuthorRepository
+	bookRepo      domain.BookRepository
+	authorRepo    domain.AuthorRepository
+	transactioner repository.Transactioner
 }
 
-func NewBookUsecase(br domain.BookRepository, ar domain.AuthorRepository, brr domain.BorrowingRecordRepository) domain.BookUsecase {
+func NewBookUsecase(br domain.BookRepository, ar domain.AuthorRepository, brr domain.BorrowingRecordRepository, trx repository.Transactioner) domain.BookUsecase {
 	return &bookUsecase{
-		bookRepo:   br,
-		authorRepo: ar,
+		bookRepo:      br,
+		authorRepo:    ar,
+		transactioner: trx,
 	}
 }
 
 func (u *bookUsecase) FetchAll(ctx context.Context) ([]domain.Book, error) {
-	books, err := u.bookRepo.FetchAll(ctx)
+	tx, err := u.transactioner.BeginTx()
+	if err != nil {
+		return nil, err
+	}
+
+	bookRepoTx := tx.BookRepository()
+	books, err := bookRepoTx.FetchAll(ctx)
 
 	if err != nil && err == sql.ErrNoRows {
 		return nil, apperror.NewNotFoundError(nil, "book")
