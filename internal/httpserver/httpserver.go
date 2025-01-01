@@ -86,6 +86,13 @@ func initServer(config *config.Config) *http.Server {
 		})
 	})
 
+	r.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, httpdto.Response{
+			Message: "Welcome to library API",
+			Data:    nil,
+		})
+	})
+
 	if err := r.Run(":8080"); err != nil {
 		log.Fatal("error gin")
 	}
